@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+
+# Secrets and local config
+.env
+.env.local
+*.env.local
+
+# Raw and processed data — reproducible via scripts/prepare_data.py, and far
+# too large to belong in version control.
+backend/data/raw/
+backend/data/processed/
+
+# Trained model artifacts — reproducible via scripts/train_model.py
+backend/artifacts/*.joblib
+backend/artifacts/*.json
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

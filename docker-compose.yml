@@ -1,0 +1,96 @@
+# RideDemand — postgres, backend API and the built frontend.
+#
+# First run:
+#   cp .env.example .env
+#   docker compose up -d postgres
+#   docker compose --profile setup run --rm pipeline   # download, load, train
+#   docker compose up -d backend frontend
+#
+# The pipeline step is deliberately separate: it downloads ~90 MB of raw trip
+# data and trains a model, which should not happen on every container restart.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ridedemand-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ridedemand}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ridedemand}
+      POSTGRES_DB: ${POSTGRES_DB:-ridedemand}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ridedemand} -d ${POSTGRES_DB:-ridedemand}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # One-shot: raw data -> processed CSVs -> PostgreSQL -> trained model.
+  pipeline:
+    build:
+      context: ./backend
+    container_name: ridedemand-pipeline
+    profiles: ["setup"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Everything in .env reaches the container, so a setting like BBOX_MIN_LAT
+    # cannot be set locally and then silently ignored here.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Overrides whatever .env says: inside the Compose network the database
+      # is reachable as `postgres`, not `localhost`.
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ridedemand}:${POSTGRES_PASSWORD:-ridedemand}@postgres:5432/${POSTGRES_DB:-ridedemand}
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/artifacts:/app/artifacts
+    command: >
+      sh -c "python -m scripts.prepare_data --months ${DATA_MONTHS:-apr14 may14 jun14}
+      && python -m scripts.load_db
+      && python -m scripts.train_model"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: ridedemand-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # The whole .env reaches the container — including the study-area and map
+    # settings that /api/config serves to the frontend. ANTHROPIC_API_KEY is
+    # optional; without it the copilot uses its deterministic fallback.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Overrides whatever .env says: inside the Compose network the database
+      # is reachable as `postgres`, not `localhost`.
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ridedemand}:${POSTGRES_PASSWORD:-ridedemand}@postgres:5432/${POSTGRES_DB:-ridedemand}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:4173,http://localhost:3000,http://127.0.0.1:3000}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      # Shares the artifacts the pipeline service produced.
+      - ./backend/data:/app/data
+      - ./backend/artifacts:/app/artifacts
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+    container_name: ridedemand-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+
+volumes:
+  postgres-data:
