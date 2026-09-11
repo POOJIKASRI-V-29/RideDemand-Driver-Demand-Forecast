@@ -319,8 +319,3 @@ Not implemented — reasonable next steps:
 
 **Poojikasri V** — [@POOJIKASRI-V-29](https://github.com/POOJIKASRI-V-29)
 
-Built as a submission for the IgnitionAI Full-Stack Development Internship assessment.
-
-Dataset courtesy of the NYC Taxi & Limousine Commission via
-[FiveThirtyEight](https://github.com/fivethirtyeight/uber-tlc-foil-response).
-Map tiles © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors.
