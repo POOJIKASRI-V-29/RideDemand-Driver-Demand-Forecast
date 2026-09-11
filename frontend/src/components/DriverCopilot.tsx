@@ -12,14 +12,14 @@ interface Props {
  * The driver-facing briefing.
  *
  * The text is written from the backend's own prediction figures. When no LLM
- * key is configured the backend answers with a deterministic template instead,
- * and the footer says which of the two produced this text.
+ * key is configured the backend answers with a deterministic template instead.
+ * Either way the figures come from the forecast, never from the model.
  */
 export function DriverCopilot({ copilot, loading, error, onRefresh, disabled }: Props) {
   const provenance = copilot
     ? copilot.source === "llm"
-      ? `AI-generated · ${copilot.model ?? "llm"}`
-      : "Deterministic fallback · no LLM key"
+      ? "AI-generated from your forecast"
+      : "Generated from your forecast"
     : "Awaiting forecast";
 
   return (
@@ -59,7 +59,6 @@ export function DriverCopilot({ copilot, loading, error, onRefresh, disabled }: 
 
       <div className="copilot__foot">
         <span>{provenance}</span>
-        <span className="copilot__endpoint">POST /api/copilot</span>
       </div>
     </div>
   );

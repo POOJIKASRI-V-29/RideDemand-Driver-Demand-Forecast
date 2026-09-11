@@ -87,9 +87,11 @@ the map, the list, the recommendation and the copilot can never disagree with ea
 | 17 | This README | — |
 | 18 | Backend tests | `backend/tests/` |
 
-Two further panels show only measured values: an hourly demand profile for the selected day
-(24 real predictions summed across zones) and a pipeline card reporting the model's actual
-test metrics.
+One further panel shows only measured values: an hourly demand profile for the selected day,
+which is 24 real predictions summed across zones. The dashboard is deliberately driver-facing,
+so the model's full evaluation figures live in `GET /api/model` and in
+[Evaluation](#evaluation) rather than on screen; the forecast's measured error is surfaced in
+the summary row as "Forecast accuracy".
 
 ## Architecture
 
@@ -288,10 +290,9 @@ gradient booster to find. R² of 0.90 reflects the strong, easily-learned variat
 Manhattan cell at 7 PM and an outer-borough cell at 4 AM; it is not evidence of a
 sophisticated model.
 
-The API reports both figures side by side (`mae` and `baseline_mae` on `/api/model`, and both
-rows in the dashboard's pipeline card) precisely so the model's contribution stays visible
-rather than assumed. Re-running the pipeline reproduces these numbers exactly —
-`random_state` is fixed.
+The API reports both figures side by side — `mae` and `baseline_mae` on `/api/model` —
+precisely so the model's contribution stays visible rather than assumed. Re-running the
+pipeline reproduces these numbers exactly: `random_state` is fixed.
 
 ## Forecast windows
 

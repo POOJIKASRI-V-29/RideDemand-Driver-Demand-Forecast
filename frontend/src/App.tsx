@@ -22,7 +22,6 @@ import { Header } from "./components/Header";
 import { HotspotList } from "./components/HotspotList";
 import { LoadingState } from "./components/LoadingState";
 import { MapLegend } from "./components/MapLegend";
-import { ModelCard } from "./components/ModelCard";
 import { RecommendationCard } from "./components/RecommendationCard";
 import { Sidebar } from "./components/Sidebar";
 
@@ -199,7 +198,6 @@ export default function App() {
               windowLabel={windowLabel}
               maxDemand={demand?.summary.max_zone_demand ?? null}
             />
-            <div className="map-credit">Leaflet · OpenStreetMap · GET /api/demand</div>
 
             {status === "ready" && forecast && (
               <RecommendationCard
@@ -252,7 +250,6 @@ export default function App() {
                   selectedHour={demand.request.hour}
                   day={demand.request.day}
                 />
-                <ModelCard model={demand.model_info} />
               </div>
             </section>
           )}

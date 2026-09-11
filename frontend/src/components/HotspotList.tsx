@@ -14,7 +14,6 @@ export function HotspotList({ hotspots, selectedZoneId, onSelectZone, windowLabe
     <div className="card">
       <div className="card__head">
         <span className="card__title">Top Demand Areas</span>
-        <span className="card__endpoint">GET /api/hotspots</span>
         <span className="card__note">Select an area to focus the map</span>
       </div>
 

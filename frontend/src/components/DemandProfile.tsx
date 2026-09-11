@@ -36,7 +36,6 @@ export function DemandProfile({ profile, selectedHour, day }: Props) {
     <div className="card">
       <div className="card__head">
         <span className="card__title">Demand through {day}</span>
-        <span className="card__endpoint">GET /api/demand</span>
       </div>
       <div className="card__body">
         <svg

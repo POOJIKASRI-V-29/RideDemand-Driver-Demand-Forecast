@@ -39,22 +39,9 @@ export function formatDemand(value: number): string {
 }
 
 /**
- * Error metrics need more precision than demand figures: the model and the
- * baseline differ in the second decimal place, and rounding to one would show
- * them as the same number.
+ * Error metrics carry a decimal more than demand figures, so the accuracy
+ * reading is not rounded away to a bare whole number.
  */
 export function formatMetric(value: number | null | undefined): string {
-  return value == null ? "—" : value.toFixed(3);
-}
-
-export function formatCount(value: number | null | undefined): string {
-  return value == null ? "—" : value.toLocaleString("en-US");
-}
-
-export function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime())
-    ? "—"
-    : date.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+  return value == null ? "—" : value.toFixed(2);
 }

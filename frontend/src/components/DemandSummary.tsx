@@ -26,9 +26,9 @@ export function DemandSummary({ demand }: Props) {
       hint: `${request.day} · ${formatDemand(summary.peak_hour_demand)} req/hr city-wide`,
     },
     {
-      label: "Model error (MAE)",
-      value: formatMetric(model.mae),
-      hint: model.mae == null ? "baseline mode" : "req/hr per zone · held-out test",
+      label: "Forecast accuracy",
+      value: model.mae == null ? "—" : `${formatMetric(model.mae)} req/hr`,
+      hint: model.mae == null ? "baseline mode" : "avg. error per zone (MAE)",
     },
   ];
 

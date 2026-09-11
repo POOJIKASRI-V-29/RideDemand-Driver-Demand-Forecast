@@ -23,15 +23,13 @@ export function Sidebar({ config, modelInfo }: Props) {
 
   /** Only values the backend actually measured; unknowns render as an em dash. */
   const facts: [string, string][] = [
-    ["Grid cell", `${config.grid_size}°`],
-    ["Zones", modelInfo?.n_zones == null ? "—" : String(modelInfo.n_zones)],
+    ["Demand zones", modelInfo?.n_zones == null ? "—" : String(modelInfo.n_zones)],
     [
-      "Trained on",
+      "Trip history",
       modelInfo?.train_start && modelInfo.train_end
         ? `${formatMonth(modelInfo.train_start)}–${formatMonth(modelInfo.train_end)}`
         : "—",
     ],
-    ["Test MAE", modelInfo?.mae == null ? "—" : modelInfo.mae.toFixed(3)],
   ];
 
   return (
@@ -71,9 +69,7 @@ export function Sidebar({ config, modelInfo }: Props) {
             <div className="rail__status-title">
               {usingModel ? "Model serving" : "Historical baseline"}
             </div>
-            <div className="rail__status-sub">
-              {modelInfo?.n_zones == null ? "—" : modelInfo.n_zones} zones · {config.grid_size}°
-            </div>
+            <div className="rail__status-sub">{config.city_name}</div>
           </div>
         </div>
       </div>

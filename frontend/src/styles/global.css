@@ -661,20 +661,6 @@ input {
   line-height: 1.45;
 }
 
-.map-credit {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 500;
-  padding: 5px 9px;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-family: var(--mono);
-  font-size: 9.5px;
-  color: var(--faint);
-}
-
 /* ----------------------------------------------------------------- cards -- */
 
 .card {
@@ -697,12 +683,6 @@ input {
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.01em;
-}
-
-.card__endpoint {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--fainter);
 }
 
 .card__note {
@@ -1039,13 +1019,6 @@ input {
   color: rgba(255, 255, 255, 0.45);
 }
 
-.copilot__endpoint {
-  margin-left: auto;
-  text-transform: none;
-  letter-spacing: 0;
-  color: rgba(255, 255, 255, 0.3);
-}
-
 /* --------------------------------------------------------------- profile -- */
 
 .profile__chart {
@@ -1274,10 +1247,6 @@ input {
   }
 
   .legend__foot {
-    display: none;
-  }
-
-  .map-credit {
     display: none;
   }
 }
